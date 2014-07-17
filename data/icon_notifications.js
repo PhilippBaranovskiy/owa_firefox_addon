@@ -1,3 +1,5 @@
+var prev_amount_messages = 0;
+
 var owa_icon = document.createElement("link");
 owa_icon.rel = "icon";
 owa_icon.type = "image/png";
@@ -88,9 +90,6 @@ function set_favicon(count) {
 
 
 setInterval(function(){
-  
-  self.port.emit("notify", 5);
-  
   var folder_panes = document.querySelectorAll("[aria-label='Folder Pane']");
   var unread_container;
   var count = 0;
@@ -105,6 +104,14 @@ setInterval(function(){
   
   }
 
+  if (count >= prev_amount_messages) {
   
-  set_favicon(count+5);
-}, 2000);
+    if (prev_amount_messages != 0) {
+      self.port.emit("notify", count - prev_amount_messages);
+      set_favicon(count - prev_amount_messages);
+    }
+    prev_amount_messages = count;
+  
+  }
+  
+}, 5000);
