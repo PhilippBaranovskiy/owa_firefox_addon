@@ -1,4 +1,7 @@
 var prev_amount_messages = 0;
+var amount_unread_messages = 0;
+
+var tab_active = false;
 
 var owa_icon = document.createElement("link");
 owa_icon.rel = "icon";
@@ -22,29 +25,31 @@ function generate_icon(number, clear) {
 
   ctx.drawImage(img, 0,0);
 
-  (function(context, x, y, w, h, radius){
-    var r = x + w;
-    var b = y + h;
-    context.beginPath();
-    context.fillStyle = "red";
-    context.lineWidth="1";
-    context.moveTo(x+radius, y);
-    context.lineTo(r-radius, y);
-    context.quadraticCurveTo(r, y, r, y+radius);
-    context.lineTo(r, y+h-radius);
-    context.quadraticCurveTo(r, b, r-radius, b);
-    context.lineTo(x+radius, b);
-    context.quadraticCurveTo(x, b, x, b-radius);
-    context.lineTo(x, y+radius);
-    context.quadraticCurveTo(x, y, x+radius, y);
-    context.fill();
-  })(ctx, 2, -2, 16, 14, 0);
-
+  if (!clear) {
+    (function(context, x, y, w, h, radius){
+      var r = x + w;
+      var b = y + h;
+      context.beginPath();
+      context.fillStyle = "red";
+      context.lineWidth="1";
+      context.moveTo(x+radius, y);
+      context.lineTo(r-radius, y);
+      context.quadraticCurveTo(r, y, r, y+radius);
+      context.lineTo(r, y+h-radius);
+      context.quadraticCurveTo(r, b, r-radius, b);
+      context.lineTo(x+radius, b);
+      context.quadraticCurveTo(x, b, x, b-radius);
+      context.lineTo(x, y+radius);
+      context.quadraticCurveTo(x, y, x+radius, y);
+      context.fill();
+    })(ctx, 2, -2, 16, 14, 0);
+  
     ctx.font = "bold 10px Arial";
     ctx.textBaseline = "top";
     ctx.textAlign = "center";
     ctx.fillStyle = "white";
     ctx.fillText(number, 9,2);
+  }
   
   return canvas.toDataURL("image/png");
 }
@@ -57,16 +62,12 @@ function get_base64_icon(number) {
     number = "99";
   var icon;
   
-  if (number != current_icon_number) {
-      if (number != 0)
-        icon = generate_icon(number);
-      else
-        icon = generate_icon(number, true);
+  if (number != 0)
+    icon = generate_icon(number);
+  else
+    icon = generate_icon(number, true);
         
-      current_icon_number = number;
-  } else {
-    icon = owa_icon.href;
-  }
+  current_icon_number = number;
   
   return icon;
 }
@@ -88,8 +89,7 @@ function set_favicon(count) {
   }
 }
 
-
-setInterval(function(){
+function notify() {
   var folder_panes = document.querySelectorAll("[aria-label='Folder Pane']");
   var unread_container;
   var count = 0;
@@ -104,14 +104,36 @@ setInterval(function(){
   
   }
 
-  if (count >= prev_amount_messages) {
+  if (count > prev_amount_messages) {
   
     if (prev_amount_messages != 0) {
-      self.port.emit("notify", count - prev_amount_messages);
-      set_favicon(count - prev_amount_messages);
+      amount_unread_messages += count - prev_amount_messages;
     }
+    
     prev_amount_messages = count;
-  
+    
+    console.log("tab_active",tab_active);
+    if (!tab_active) {
+      self.port.emit("notify", amount_unread_messages);
+      set_favicon(amount_unread_messages);
+    }
   }
   
-}, 5000);
+}
+
+
+function clear_unread_counter(){
+  amount_unread_messages = 0;
+  set_favicon(0);
+  console.log("clear_unread_counter fired");
+}
+
+self.port.on("activated", function(){
+  clear_unread_counter();
+  tab_active = true;
+});
+self.port.on("deactivated", function(){
+  tab_active = false;
+});
+
+setInterval(notify, 5000);
