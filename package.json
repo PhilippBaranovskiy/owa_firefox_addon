@@ -1,9 +1,9 @@
 {
-  "name": "owa_firefox_addon",
+  "name": "OWA firefox addon",
   "title": "owa_firefox_addon",
   "id": "jid1-N9Mzor3KAWFbQg",
-  "description": "a basic add-on",
-  "author": "",
+  "description": "Firefox addon for corporate OWA is useful to show counter of unread messages and notify about it via system notifications",
+  "author": "Phil Baranovskiy",
   "license": "MPL 2.0",
-  "version": "0.1"
+  "version": "1.0.1"
 }
