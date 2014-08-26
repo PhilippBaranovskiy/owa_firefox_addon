@@ -94,14 +94,22 @@ function notify() {
   var unread_container;
   var count = 0;
 
-  for(var pane = folder_panes.length-1; pane >= 0; pane--){
-    
-    unread_container = folder_panes[pane].querySelectorAll("[id*='.ucount']");
-    
+  function countIt(unread_container){
     for(var u_node = unread_container.length-1; u_node>=0; u_node--){
       count += parseInt(unread_container[u_node].innerHTML.match(/\d/gi).join(""), 10);
     }
-  
+  }
+
+  if (folder_panes.length > 0) {
+
+    for(var pane = folder_panes.length-1; pane >= 0; pane--){
+      
+      unread_container = folder_panes[pane].querySelectorAll("[id*='.ucount']");
+      countIt(unread_container);
+    }
+  } else {
+    unread_container = document.querySelector('#spnCV');
+    countIt(unread_container);
   }
 
   if (count > prev_amount_messages) {
