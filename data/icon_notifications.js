@@ -108,7 +108,7 @@ function notify() {
       countIt(unread_container);
     }
   } else {
-    unread_container = document.querySelector('#spnCV');
+    unread_container = document.querySelectorAll('#spnCV');
     countIt(unread_container);
   }
 
