@@ -1,9 +1,19 @@
 {
-  "name": "owa_firefox_addon",
-  "title": "OWA firefox addon",
-  "id": "jid1-N9Mzor3KAWFbQg",
-  "description": "Firefox addon for corporate OWA is useful to show counter of unread messages and notify about it via system notifications",
-  "author": "Phil Baranovskiy",
+  "id": "owa_notifications@mihai-chezan.github.com",
+  "name": "owa_notifications",
+  "title": "Outlook Web App Notifications",
+  "description": "Add system notifications capability to OWA (Outlook Web App). You must be logged in OWA in order for this to work. No configuration needed. How it works: when new email arrives into OWA a system notification about this event will be shown. Also the fav icon and document title of the OWA tab will be updated to show the number of unread emails (so this also works with pinned tabs). Fork of OWA_firefox_addon by Phil Baranovskiy.",
+  "icon": "data/owa_full.png",
+  "homepage": "https://github.com/mihai-chezan/owa_notifications_firefox_extension",
+  "author": "Mihai Chezan",
+  "contributors": "Phil Baranovskiy",
   "license": "MPL 2.0",
-  "version": "1.1.0"
+  "version": "1.2.0",
+  "preferences": [{
+        "name": "delayBetweenChecks",
+        "title": "Seconds to wait between checks",
+        "description": "Controls how fast new emails are dettected and notifications will appear. Lower value means faster reaction.",
+        "type": "integer",
+        "value": 1
+    }]
 }
