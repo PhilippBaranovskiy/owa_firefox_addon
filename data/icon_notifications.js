@@ -1,7 +1,4 @@
-var prev_amount_messages = 0;
-var amount_unread_messages = 0;
-
-var tab_active = false;
+var prev_unread_messages = 0;
 
 var owa_icon = document.createElement("link");
 owa_icon.rel = "icon";
@@ -26,7 +23,7 @@ function generate_icon(number, clear) {
   ctx.drawImage(img, 0,0);
 
   if (!clear) {
-    (function(context, x, y, w, h, radius){
+    (function(context, x, y, w, h, radius) {
       var r = x + w;
       var b = y + h;
       context.beginPath();
@@ -74,74 +71,51 @@ function get_base64_icon(number) {
 
 function set_favicon(count) {
   var icon = get_base64_icon(count);
-  
   var s = document.querySelectorAll("link[rel*='icon'][type='image/png']");
 
   if (s.length != 1 || s[0].href != "data:image/png;base64,"+icon) {
-  
     for(var i = s.length-1; i >= 0; i--){
       s[i].remove();
     }
-    
     owa_icon.href = icon;
     document.head.appendChild(owa_icon);
-  
   }
 }
 
-function notify() {
-  var folder_panes = document.querySelectorAll("[aria-label='Folder Pane']");
+function countIt(unread_container) {
+  var count = 0;
+  for(var u_node = unread_container.length-1; u_node>=0; u_node--) {
+    count += parseInt(unread_container[u_node].innerHTML.match(/\d/gi).join(""), 10);
+  }
+  return count;
+}
+  
+function countUnreadMessages() {
   var unread_container;
   var count = 0;
 
-  function countIt(unread_container){
-    for(var u_node = unread_container.length-1; u_node>=0; u_node--){
-      count += parseInt(unread_container[u_node].innerHTML.match(/\d/gi).join(""), 10);
-    }
-  }
-
+  var folder_panes = document.querySelectorAll("[aria-label='Folder Pane']");
   if (folder_panes.length > 0) {
-
     for(var pane = folder_panes.length-1; pane >= 0; pane--){
-      
       unread_container = folder_panes[pane].querySelectorAll("[id*='.ucount']");
-      countIt(unread_container);
+      count = countIt(unread_container);
     }
   } else {
     unread_container = document.querySelectorAll('#spnCV');
-    countIt(unread_container);
+    count = countIt(unread_container);
   }
-
-  if (count > prev_amount_messages) {
-  
-    if (prev_amount_messages != 0) {
-      amount_unread_messages += count - prev_amount_messages;
-    }
-    
-    prev_amount_messages = count;
-    
-    console.log("tab_active",tab_active);
-    if (!tab_active) {
-      self.port.emit("notify", amount_unread_messages);
-      set_favicon(amount_unread_messages);
-    }
-  }
-  
+  return count;
 }
 
-
-function clear_unread_counter(){
-  amount_unread_messages = 0;
-  set_favicon(0);
-  console.log("clear_unread_counter fired");
+function notify() {
+  var count = countUnreadMessages();
+  if (count != prev_unread_messages) {
+	set_favicon(count);
+	if (count > prev_unread_messages) {
+	  self.port.emit("notify", count - prev_unread_messages);
+    }
+  }
+  prev_unread_messages = count;
 }
 
-self.port.on("activated", function(){
-  clear_unread_counter();
-  tab_active = true;
-});
-self.port.on("deactivated", function(){
-  tab_active = false;
-});
-
-setInterval(notify, 5000);
+setInterval(notify, 1000);
