@@ -70,7 +70,7 @@ function setFavicon(count) {
   var icon = getBase64Icon(count);
   var s = document.querySelectorAll("link[rel*='icon'][type='image/png']");
 
-  if (s.length != 1 || s[0].href != "data:image/png;base64,"+icon) {
+  if (s.length != 1 || s[0].href != icon) {
     for(var i = s.length-1; i >= 0; i--){
       s[i].remove();
     }
