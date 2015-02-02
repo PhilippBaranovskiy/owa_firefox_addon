@@ -107,7 +107,16 @@ function countUnreadMessages() {
     }
   } else {
     unreadContainer = document.querySelectorAll('#spnCV');
-    count = countIt(unreadContainer);
+    var subSetunreadContainer = [];
+    for(var u_node = unreadContainer.length-1; u_node>=0; u_node--) {
+        var container = unreadContainer[u_node];
+        var folderName = container.parentNode.parentNode.querySelector('#spnFldrNm').getAttribute("fldrnm");
+        // Can be used to check for other folder names also
+        if(folderName == "Unread Mail") {
+            subSetunreadContainer.push(container);
+        }
+    }
+    count = countIt(subSetunreadContainer);
   }
   return count;
 }
