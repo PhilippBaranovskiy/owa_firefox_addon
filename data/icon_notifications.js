@@ -101,13 +101,11 @@ function countUnreadMessages() {
 
   var folder_panes = document.querySelectorAll("[aria-label='Folder Pane']");
   if (folder_panes.length > 0) {
-    console.log("Found folder panes");
     for(var pane = folder_panes.length-1; pane >= 0; pane--){
       unreadContainer = folder_panes[pane].querySelectorAll("[id*='.ucount']");
       count = countIt(unreadContainer);
     }
   } else {
-    
     unreadContainer = document.querySelectorAll('#spnCV');
     var subSetunreadContainer = [];
     for(var u_node = unreadContainer.length-1; u_node>=0; u_node--) {
