@@ -101,13 +101,24 @@ function countUnreadMessages() {
 
   var folder_panes = document.querySelectorAll("[aria-label='Folder Pane']");
   if (folder_panes.length > 0) {
+    console.log("Found folder panes");
     for(var pane = folder_panes.length-1; pane >= 0; pane--){
       unreadContainer = folder_panes[pane].querySelectorAll("[id*='.ucount']");
       count = countIt(unreadContainer);
     }
   } else {
+    
     unreadContainer = document.querySelectorAll('#spnCV');
-    count = countIt(unreadContainer);
+    var subSetunreadContainer = [];
+    for(var u_node = unreadContainer.length-1; u_node>=0; u_node--) {
+        var container = unreadContainer[u_node];
+        var folderName = container.parentNode.parentNode.querySelector('#spnFldrNm').getAttribute("fldrnm");
+        // Can be used to check for other folder names also
+        if(folderName == "Unread Mail") {
+            subSetunreadContainer.push(container);
+        }
+    }
+    count = countIt(subSetunreadContainer);
   }
   return count;
 }
