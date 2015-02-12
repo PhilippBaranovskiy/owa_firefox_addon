@@ -1,4 +1,4 @@
-Outlook Web App Notifications - Firefox extension
+Outlook Web App Notifications — Firefox extension
 =================
 
 Firefox extension adds system notifications capability to [OWA - Outlook Web App](https://en.wikipedia.org/wiki/Outlook_Web_App).
