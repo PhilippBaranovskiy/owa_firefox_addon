@@ -1,7 +1,7 @@
 Outlook Web App Notifications - Firefox extension
 =================
 
-Firefox extension that adds system notifications capability to [OWA - Outlook Web App](https://en.wikipedia.org/wiki/Outlook_Web_App).
+Firefox extension adds system notifications capability to [OWA - Outlook Web App](https://en.wikipedia.org/wiki/Outlook_Web_App).
 
 The extension is activated if you have an OWA tab open or when you open a new tab and log into OWA. No configuration needed. The extension *doesn't* need any OWA account information, *doesn't* read any private data and *doesn't* connect to the internet to send any data.
 
@@ -9,17 +9,6 @@ How it works: when new email arrives into OWA a system notification about this e
 
 How it really works: for each tab open that has the url in the form "http://anything/owa/anything" or "https://anything/owa/anything" a timer task is set to fire every 1 second by default (configurable). The task counts the number of unread emails (using some css selectors) and if the count is different than the last one it updates the fav icon and document title and also if it's greater it shows a notification with the number of new unread emails. All this is done using [page-mod](https://developer.mozilla.org/en-US/Add-ons/SDK/High-Level_APIs/page-mod) and [notifications](https://developer.mozilla.org/en-US/Add-ons/SDK/High-Level_APIs/notifications) API from Firefox.
 
-Fork of [OWA_firefox_addon by Phil Baranovskiy](https://github.com/rockfield/owa_firefox_addon).
+![Screenshot](https://raw.githubusercontent.com/rockfield/owa_firefox_addon/master/owa_pub.png "Screenshot")
 
-Ready to install assemblies associated with releases (see builds folder).
-
-![Notification when tab is not active](https://raw.githubusercontent.com/mihai-chezan/owa_notifications_firefox_extension/master/doc/tab-normal.png "Notification when tab is not active")
-
-![Notification when tab is pinned and not active](https://raw.githubusercontent.com/mihai-chezan/owa_notifications_firefox_extension/master/doc/tab-pinned.png "Notification when tab is pinned and not active")
-
-![Notification when tab is active](https://raw.githubusercontent.com/mihai-chezan/owa_notifications_firefox_extension/master/doc/tab-active.png "Notification when tab is active")
-
-![Notification when tab is pinned and active](https://raw.githubusercontent.com/mihai-chezan/owa_notifications_firefox_extension/master/doc/tab-pinned-active.png "Notification when tab is pinned and active")
-
-![Notification and browser taskbar when other window is active and in focus](https://raw.githubusercontent.com/mihai-chezan/owa_notifications_firefox_extension/master/doc/taskbar.png "Notification and browser taskbar when other window is active and in focus")
-
+![Screenshot](https://raw.githubusercontent.com/rockfield/owa_firefox_addon/master/owa_pub_mac_without_notify_center.png "Screenshot")
