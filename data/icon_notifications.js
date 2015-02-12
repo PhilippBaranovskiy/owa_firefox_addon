@@ -90,7 +90,7 @@ function setDocumentTitle(count) {
 function countIt(unreadContainer) {
   var count = 0;
   for(var u_node = unreadContainer.length-1; u_node>=0; u_node--) {
-    count += parseInt(unreadContainer[u_node].innerHTML.match(/\d/gi).join(""), 10);
+    count += parseInt(unreadContainer[u_node].innerHTML.match(/\d{1,} unread/gi).join(""), 10);
   }
   return count;
 }
