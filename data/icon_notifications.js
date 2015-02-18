@@ -58,7 +58,7 @@ function getBase64Icon(number) {
 		number = "99";
 	}
 	var icon;
-	if (number != 0) {
+	if (number !== 0) {
 		icon = generateIcon(number);
 	} else {
 		icon = generateIcon(number, true);
@@ -87,12 +87,16 @@ function setDocumentTitle(count) {
 	document.title = countPrefix + documentTitle;
 }
 
-function countIt(unreadContainer) {
+function countIt(unreadContainer, legacySupport) {
 	var count = 0;
 	for(var u_node = unreadContainer.length-1; u_node>=0; u_node--) {
-		var amountArr = unreadContainer[u_node].innerHTML.match(/\d{1,} unread/gi);
+		var amountHtml = unreadContainer[u_node].innerHTML; 
+		var amountArr = amountHtml.match(/\d{1,} unread/gi);
+		var amount = amountHtml.match(/\d/gi).join('');
 		if ( Array.isArray(amountArr) ) {
 			count += parseInt(amountArr[0], 10);
+		} else if ( legacySupport ) {
+			count += parseInt(amount, 10);
 		}
 	}
 	return count;
@@ -108,7 +112,7 @@ function countUnreadMessages() {
 			unreadContainer = folder_panes[pane].querySelectorAll("[id*='.ucount']");
 			count = countIt(unreadContainer);
 		}
-	} else {
+	} else { // legacySupport for 2010 version and some others
 		unreadContainer = document.querySelectorAll('#spnCV');
 		var subSetunreadContainer = [];
 		for(var u_node = unreadContainer.length-1; u_node>=0; u_node--) {
@@ -119,7 +123,7 @@ function countUnreadMessages() {
 						subSetunreadContainer.push(container);
 				}
 		}
-		count = countIt(subSetunreadContainer);
+		count = countIt(subSetunreadContainer, true);
 	}
 	return count;
 }
