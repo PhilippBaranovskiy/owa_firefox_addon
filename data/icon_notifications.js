@@ -5,8 +5,6 @@ var documentTitle = document.title;
 var owaIcon = getOwaIcon();
 document.head.appendChild(owaIcon);
 
-var img = document.createElement("img");
-img.src = owaIcon.href;
 
 self.port.on("startMonitor", function(delayBetweenChecks) {
     if (timer) {
@@ -37,47 +35,48 @@ function getOwaIcon(){
     return owaIcon;
 }
 
-function drawIcon(context, x, y, w, h, radius){
-    var r = x + w;
-    var b = y + h;
+function drawIcon(){
+    var canvas; 
+    var context; 
+    var startpoint_x = 5;
+    var startpoint_y = 10;
+    var height = 20;
+    var length = 30;
+    //var img = document.createElement("img");
+    //img.src = owaIcon.href;
+    canvas = document.createElement("canvas");
+    canvas.width = 50;
+    canvas.height = 50;
+
+    context = canvas.getContext("2d");
+    //context.drawImage(img, 0,0);
     context.beginPath();
-    context.fillStyle = "red";
     context.lineWidth="1";
-    context.moveTo(x+radius, y);
-    context.lineTo(r-radius, y);
-    context.quadraticCurveTo(r, y, r, y+radius);
-    context.lineTo(r, y+h-radius);
-    context.quadraticCurveTo(r, b, r-radius, b);
-    context.lineTo(x+radius, b);
-    context.quadraticCurveTo(x, b, x, b-radius);
-    context.lineTo(x, y+radius);
-    context.quadraticCurveTo(x, y, x+radius, y);
+    context.moveTo(startpoint_x, startpoint_y);
+    context.bezierCurveTo(  startpoint_x, height, startpoint_x + length, height, startpoint_x + length, startpoint_y);
+    context.moveTo(startpoint_x + length, startpoint_y);
+    context.bezierCurveTo(startpoint_x + length, startpoint_y-height + 10, startpoint_x, startpoint_y-height + 10, startpoint_x, startpoint_y); 
+    context.font = "bold 10px Arial";
+    context.textBaseline = "top";
+    context.textAlign = "center";
+    context.fillStyle = "black";
+    context.strokeStyle = "black";
+    context.fillText("H", 2,2);
     context.fill();
-    return context;
+    return canvas;
 }
 
 function generateTabIcon(unreadMessageCount, isAlreadyDisplayed){
-    var canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
-    var ctx = canvas.getContext("2d");
 
-    ctx.drawImage(img, 0,0);
-
+    var canvas;
     if (true) {
-        ctx = drawIcon(ctx, 2, -2, 16, 14, 0);
-        ctx.font = "bold 10px Arial";
-        ctx.textBaseline = "top";
-        ctx.textAlign = "center";
-        ctx.fillStyle = "white";
-        ctx.fillText(unreadMessageCount, 9,2);
+        canvas = drawIcon();
     }
-
     return canvas.toDataURL("image/png");
 }
 
 function getBase64Icon(number) {
-    number = getPrettyNumber(number);
+    var number = getPrettyNumber(number);
     return (number) ? generateTabIcon(number) : generateTabIcon(number, true);
 }
 
@@ -201,7 +200,7 @@ function generateMessage(count, isMessage){
 function notify() {
     if (haveNewMessages()) {
         var newUnreadMessageCount = getNewUnreadMessageCount();
-        //setFavicon(newUnreadMessageCount); // Probably unnecessary since you alter the document title. 
+        setFavicon(newUnreadMessageCount); // Probably unnecessary since you alter the document title. 
         addCountToDocumentTitle(newUnreadMessageCount);
         self.port.emit("notify", generateMessage(newUnreadMessageCount, true));
         currentUnreadMessageCount = newUnreadMessageCount;
