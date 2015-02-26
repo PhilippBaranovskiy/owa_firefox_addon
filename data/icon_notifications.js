@@ -73,21 +73,7 @@ function drawIcon(){
     context = canvas.getContext("2d");
     drawRoundedRectangle(context, 0, 0, 75, 70, 30);
     addTextToFavicon(context);
-    return canvas;
-}
-
-function generateTabIcon(unreadMessageCount, isAlreadyDisplayed){
-
-    var canvas;
-    if (true) {
-        canvas = drawIcon();
-    }
     return canvas.toDataURL("image/png");
-}
-
-function getBase64Icon(number) {
-    var number = getPrettyNumber(number);
-    return (number) ? generateTabIcon(number) : generateTabIcon(number, true);
 }
 
 function getPrettyNumber(number){
@@ -101,7 +87,7 @@ function getPrettyNumber(number){
 }
 
 function setFavicon(count) {
-    var icon = getBase64Icon(count);
+    var icon = drawIcon();
     var s = document.querySelectorAll("link[rel*='icon'][type='image/png']");
 
     if (s.length != 1 || s[0].href != icon) {
