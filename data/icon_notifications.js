@@ -35,34 +35,44 @@ function getOwaIcon(){
     return owaIcon;
 }
 
+function drawRoundedRectangle(ctx, x, y, width, height, radius){
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+
+    ctx.strokeStyle = "#aaaaaa";
+    ctx.stroke();
+    ctx.fillStyle = "#aaaaaa";
+    ctx.fill();
+}
+function addTextToFavicon(ctx){
+    ctx.font = "bold 40px Arial";
+    ctx.textBaseline = "top";
+    ctx.textAlign = "center";
+    ctx.fillStyle = "black";
+    var number = getPrettyNumber(getNewUnreadMessageCount());
+    var numberString = (number >= 99) ? new String(number + "+") : new String(number);
+    ctx.fillText(numberString, 40,15);
+}
+
 function drawIcon(){
     var canvas; 
     var context; 
-    var startpoint_x = 5;
-    var startpoint_y = 10;
-    var height = 20;
-    var length = 30;
-    //var img = document.createElement("img");
-    //img.src = owaIcon.href;
     canvas = document.createElement("canvas");
-    canvas.width = 50;
-    canvas.height = 50;
+    canvas.width = 75;
+    canvas.height = 75;
 
     context = canvas.getContext("2d");
-    //context.drawImage(img, 0,0);
-    context.beginPath();
-    context.lineWidth="1";
-    context.moveTo(startpoint_x, startpoint_y);
-    context.bezierCurveTo(  startpoint_x, height, startpoint_x + length, height, startpoint_x + length, startpoint_y);
-    context.moveTo(startpoint_x + length, startpoint_y);
-    context.bezierCurveTo(startpoint_x + length, startpoint_y-height + 10, startpoint_x, startpoint_y-height + 10, startpoint_x, startpoint_y); 
-    context.font = "bold 10px Arial";
-    context.textBaseline = "top";
-    context.textAlign = "center";
-    context.fillStyle = "black";
-    context.strokeStyle = "black";
-    context.fillText("H", 2,2);
-    context.fill();
+    drawRoundedRectangle(context, 0, 0, 75, 70, 30);
+    addTextToFavicon(context);
     return canvas;
 }
 
