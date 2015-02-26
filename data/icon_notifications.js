@@ -5,8 +5,6 @@ var documentTitle = document.title;
 var owaIcon = getOwaIcon();
 document.head.appendChild(owaIcon);
 
-var img = document.createElement("img");
-img.src = owaIcon.href;
 
 self.port.on("startMonitor", function(delayBetweenChecks) {
     if (timer) {
@@ -37,48 +35,45 @@ function getOwaIcon(){
     return owaIcon;
 }
 
-function drawIcon(context, x, y, w, h, radius){
-    var r = x + w;
-    var b = y + h;
-    context.beginPath();
-    context.fillStyle = "red";
-    context.lineWidth="1";
-    context.moveTo(x+radius, y);
-    context.lineTo(r-radius, y);
-    context.quadraticCurveTo(r, y, r, y+radius);
-    context.lineTo(r, y+h-radius);
-    context.quadraticCurveTo(r, b, r-radius, b);
-    context.lineTo(x+radius, b);
-    context.quadraticCurveTo(x, b, x, b-radius);
-    context.lineTo(x, y+radius);
-    context.quadraticCurveTo(x, y, x+radius, y);
-    context.fill();
-    return context;
+function drawRoundedRectangle(ctx, x, y, width, height, radius){
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+
+    ctx.strokeStyle = "#aaaaaa";
+    ctx.stroke();
+    ctx.fillStyle = "#aaaaaa";
+    ctx.fill();
+}
+function addTextToFavicon(ctx){
+    ctx.font = "bold 40px Arial";
+    ctx.textBaseline = "top";
+    ctx.textAlign = "center";
+    ctx.fillStyle = "black";
+    var number = getPrettyNumber(getNewUnreadMessageCount());
+    var numberString = (number >= 99) ? new String(number + "+") : new String(number);
+    ctx.fillText(numberString, 40,15);
 }
 
-function generateTabIcon(unreadMessageCount, isAlreadyDisplayed){
-    var canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
-    var ctx = canvas.getContext("2d");
+function drawIcon(){
+    var canvas; 
+    var context; 
+    canvas = document.createElement("canvas");
+    canvas.width = 75;
+    canvas.height = 75;
 
-    ctx.drawImage(img, 0,0);
-
-    if (true) {
-        ctx = drawIcon(ctx, 2, -2, 16, 14, 0);
-        ctx.font = "bold 10px Arial";
-        ctx.textBaseline = "top";
-        ctx.textAlign = "center";
-        ctx.fillStyle = "white";
-        ctx.fillText(unreadMessageCount, 9,2);
-    }
-
+    context = canvas.getContext("2d");
+    drawRoundedRectangle(context, 0, 0, 75, 70, 30);
+    addTextToFavicon(context);
     return canvas.toDataURL("image/png");
-}
-
-function getBase64Icon(number) {
-    number = getPrettyNumber(number);
-    return (number) ? generateTabIcon(number) : generateTabIcon(number, true);
 }
 
 function getPrettyNumber(number){
@@ -92,7 +87,7 @@ function getPrettyNumber(number){
 }
 
 function setFavicon(count) {
-    var icon = getBase64Icon(count);
+    var icon = drawIcon();
     var s = document.querySelectorAll("link[rel*='icon'][type='image/png']");
 
     if (s.length != 1 || s[0].href != icon) {
@@ -201,7 +196,7 @@ function generateMessage(count, isMessage){
 function notify() {
     if (haveNewMessages()) {
         var newUnreadMessageCount = getNewUnreadMessageCount();
-        //setFavicon(newUnreadMessageCount); // Probably unnecessary since you alter the document title. 
+        setFavicon(newUnreadMessageCount); // Probably unnecessary since you alter the document title. 
         addCountToDocumentTitle(newUnreadMessageCount);
         self.port.emit("notify", generateMessage(newUnreadMessageCount, true));
         currentUnreadMessageCount = newUnreadMessageCount;
