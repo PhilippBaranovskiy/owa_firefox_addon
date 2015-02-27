@@ -180,7 +180,7 @@ function getNewUnreadMessageCount() {
     } else {
         newUnreadMessageCount = getCountBasedOffSpans(getContainersBySpanId());
     }
-    return Math.max(newUnreadMessageCount - currentUnreadMessageCount, 0);
+    return newUnreadMessageCount;
 }
 
 function generateMessage(count, isMessage){
@@ -194,16 +194,18 @@ function generateMessage(count, isMessage){
 }
 
 function notify() {
+    var unread = getNewUnreadMessageCount();
+    
     if (haveNewMessages()) {
-        var newUnreadMessageCount = getNewUnreadMessageCount();
-        setFavicon(); // Probably unnecessary since you alter the document title. 
-        addCountToDocumentTitle(newUnreadMessageCount);
-        self.port.emit("notify", generateMessage(newUnreadMessageCount, true));
-        currentUnreadMessageCount = newUnreadMessageCount;
+        self.port.emit("notify", generateMessage(unread, true));
     }
     if (haveNewReminders()){
         var newReminderCount = getNewReminderCount();
         self.port.emit("notify", generateMessage(newReminderCount, false));
         currentReminderCount = newReminderCount;
     }
+    
+    currentUnreadMessageCount = unread;
+    setFavicon(); // Probably unnecessary since you alter the document title. 
+    addCountToDocumentTitle(currentUnreadMessageCount);
 }
