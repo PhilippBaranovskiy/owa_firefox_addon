@@ -86,13 +86,13 @@ function getPrettyNumber(number){
     return num;
 }
 
-function setFavicon(count) {
+function setFavicon() {
     var icon = drawIcon();
     var s = document.querySelectorAll("link[rel*='icon'][type='image/png']");
 
     if (s.length != 1 || s[0].href != icon) {
         for(var i = s.length-1; i >= 0; i--){
-        s[i].remove();
+            s[i].remove();
         }
         owaIcon.href = icon;
         document.head.appendChild(owaIcon);
@@ -180,7 +180,7 @@ function getNewUnreadMessageCount() {
     } else {
         newUnreadMessageCount = getCountBasedOffSpans(getContainersBySpanId());
     }
-    return newUnreadMessageCount - currentUnreadMessageCount;
+    return Math.max(newUnreadMessageCount - currentUnreadMessageCount, 0);
 }
 
 function generateMessage(count, isMessage){
@@ -196,7 +196,7 @@ function generateMessage(count, isMessage){
 function notify() {
     if (haveNewMessages()) {
         var newUnreadMessageCount = getNewUnreadMessageCount();
-        setFavicon(newUnreadMessageCount); // Probably unnecessary since you alter the document title. 
+        setFavicon(); // Probably unnecessary since you alter the document title. 
         addCountToDocumentTitle(newUnreadMessageCount);
         self.port.emit("notify", generateMessage(newUnreadMessageCount, true));
         currentUnreadMessageCount = newUnreadMessageCount;
