@@ -14,6 +14,6 @@
         "title": "Seconds to wait between checks",
         "description": "Controls how fast new emails are dettected and notifications will appear. Lower value means faster reaction.",
         "type": "integer",
-        "value": 1
+        "value": 5
     }]
 }
