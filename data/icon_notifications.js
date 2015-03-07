@@ -3,7 +3,9 @@ var currentUnreadMessageCount = 0;
 var currentReminderCount = 0;
 var documentTitle = document.title;
 var owaIcon = getOwaIcon();
-document.head.appendChild(owaIcon);
+if (document.head) {
+    document.head.appendChild(owaIcon);
+}
 
 
 self.port.on("startMonitor", function(delayBetweenChecks) {
@@ -13,7 +15,7 @@ self.port.on("startMonitor", function(delayBetweenChecks) {
     if (delayBetweenChecks < 1) {
         delayBetweenChecks = 1;
     }
-    timer = setInterval(notify, delayBetweenChecks * 5000);
+    timer = setInterval(notify, delayBetweenChecks * 1000);
 });
 
 self.port.on("detach", function() {
@@ -92,10 +94,15 @@ function setFavicon(count) {
 
     if (s.length != 1 || s[0].href != icon) {
         for(var i = s.length-1; i >= 0; i--){
-        s[i].remove();
+            s[i].remove();
         }
+
         owaIcon.href = icon;
-        document.head.appendChild(owaIcon);
+        try {
+            document.head.appendChild(owaIcon);
+        } catch (exp) {
+            console.error(exp);
+        }
     }
 }
 
@@ -179,7 +186,7 @@ function haveNewReminders(){
 }
 
 function haveNewMessages(){
-    return ( getNewUnreadMessageCount() > currentUnreadMessageCount);
+    return Boolean(getNewUnreadMessageCount());
 }
 
 function getNewUnreadMessageCount() {
@@ -193,14 +200,8 @@ function getNewUnreadMessageCount() {
     return newUnreadMessageCount - currentUnreadMessageCount;
 }
 
-function generateMessage(count, isMessage){
-    var message = "";
-    if (isMessage){
-        message = "You have " + count + " new " + ((count > 1) ? " messages" : " message") + ".";
-    } else {
-        message = "You have " + count + " new " + ((count > 1) ? " reminders" : " reminder") + ".";
-    }
-    return message;
+function generateMessage(count, message){
+    return 'You have ' + count + ' new ' + ((count > 1) ? message : message + 's') + '.';
 }
 
 function notify() {
@@ -208,12 +209,12 @@ function notify() {
         var newUnreadMessageCount = getNewUnreadMessageCount();
         setFavicon(newUnreadMessageCount); // Probably unnecessary since you alter the document title. 
         addCountToDocumentTitle(newUnreadMessageCount);
-        self.port.emit("notify", generateMessage(newUnreadMessageCount, true));
+        self.port.emit("notify", generateMessage(newUnreadMessageCount, 'message'));
         currentUnreadMessageCount = newUnreadMessageCount;
     }
     if (haveNewReminders()){
         var newReminderCount = getNewReminderCount();
-        self.port.emit("notify", generateMessage(newReminderCount, false));
+        self.port.emit("notify", generateMessage(newReminderCount, 'reminder'));
         currentReminderCount = newReminderCount;
     }
 }
