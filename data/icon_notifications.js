@@ -226,26 +226,33 @@ function getUnreadMessageCount() {
 }
 
 function generateMessage(count, message){
-	return 'You have ' + count + ' new ' + ((count <= 1) ? message : message + 's') + '.';
+	return count + ' new ' + ((count <= 1) ? message : message + 's') + '.';
 }
 
 function notify() {
-	// var notifyMessage = 'You have:\n';
+	var notifyMessages = ['You have'];
 
 	var newUnreadMessageCount = getNewUnreadMessageCount();
 	var unreadMessageCount = getUnreadMessageCount();
 	setFavicon(unreadMessageCount); // Probably unnecessary since you alter the document title.
-	if (haveNewMessages()) {
-		self.port.emit("notify", generateMessage(newUnreadMessageCount, 'message'));
-	}
 
 	var reminderCount = getReminderCount();
 	var newReminderCount = getNewReminderCount();
-	if (haveNewReminders()){
-		self.port.emit("notify", generateMessage(newReminderCount, 'reminder'));
 
+	if (haveNewMessages()){
+		notifyMessages.push( generateMessage(newUnreadMessageCount, 'message') );
 	}
-
+	if (haveNewReminders()){
+		notifyMessages.push( generateMessage(newReminderCount, 'reminder') );
+	}
+	if (notifyMessages.length > 1) {
+		if (notifyMessages.length == 2) {
+			self.port.emit("notify", notifyMessages.join(' '));
+		} else {
+			notifyMessages[0] += ':';
+			self.port.emit("notify", notifyMessages.join('\n— ') + '\n ');
+		}
+	}
 	addCountToDocumentTitle( {messages: unreadMessageCount, reminders: reminderCount} );
 
 	currentReminderCount = reminderCount;

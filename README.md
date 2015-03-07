@@ -9,8 +9,6 @@ How it works: when new email arrives into OWA a system notification about this e
 
 How it really works: for each tab open that has the url in the form "http://anything/owa/anything" or "https://anything/owa/anything" a timer task is set to fire every 1 second by default (configurable). The task counts the number of unread emails (using some css selectors) and if the count is different than the last one it updates the fav icon and document title and also if it's greater it shows a notification with the number of new unread emails. All this is done using [page-mod](https://developer.mozilla.org/en-US/Add-ons/SDK/High-Level_APIs/page-mod) and [notifications](https://developer.mozilla.org/en-US/Add-ons/SDK/High-Level_APIs/notifications) API from Firefox.
 
-I have opportunity to test it on OWA version: 15.0.1044.25
-
-![Screenshot](https://raw.githubusercontent.com/rockfield/owa_firefox_addon/master/owa_pub.png "Screenshot")
+I have opportunity to test it on OWA version's markup: 15.0.1044.25
 
 ![Screenshot](https://raw.githubusercontent.com/rockfield/owa_firefox_addon/master/owa_pub_mac_without_notify_center.png "Screenshot")

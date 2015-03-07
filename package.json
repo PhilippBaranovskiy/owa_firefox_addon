@@ -1,14 +1,14 @@
 {
   "id": "jid1-N9Mzor3KAWFbQg@jetpack",
   "name": "owa_notifications",
-  "title": "Outlook Web App Notifications: Icon & Popup",
+  "title": "Outlook Web App ( + Reminders)",
   "description": "Add system notifications capability to OWA (Outlook Web App). No configuration needed. When new email arrives into OWA a system notification about this event will be shown. Also the fav icon and document title of the OWA tab are updated to show the number of unread emails. For news & updates info follow #owa_firefox on twitter.",
   "icon": "data/owa_full.png",
   "homepage": "https://github.com/rockfield/owa_firefox_addon",
   "author": "Phil Baranovskiy",
-  "contributors": ["Mihai Chezan", "phalox", "jarrettroth"],
+  "contributors": ["phalox", "Jarrett Roth", "Taylor Ryan", "Mihai Chezan"],
   "license": "MPL 2.0",
-  "version": "1.2.4",
+  "version": "2.0",
   "preferences": [{
         "name": "delayBetweenChecks",
         "title": "Seconds to wait between checks",
