@@ -6,7 +6,7 @@
   "icon": "data/owa_full.png",
   "homepage": "https://github.com/rockfield/owa_firefox_addon",
   "author": "Phil Baranovskiy",
-  "contributors": ["phalox", "Jarrett Roth", "Taylor Ryan", "Mihai Chezan"],
+  "contributors": ["Toon Peters", "Jarrett Roth", "Taylor Ryan", "Mihai Chezan"],
   "license": "MPL 2.0",
   "version": "2.0",
   "preferences": [{
