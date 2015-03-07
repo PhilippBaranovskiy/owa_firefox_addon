@@ -11,4 +11,4 @@ How it really works: for each tab open that has the url in the form "http://anyt
 
 I have opportunity to test it on OWA version's markup: 15.0.1044.25
 
-![Screenshot](https://raw.githubusercontent.com/rockfield/owa_firefox_addon/master/owa_pub_mac_without_notify_center.png "Screenshot")
+![Screenshot](https://raw.githubusercontent.com/rockfield/owa_firefox_addon/master/mac_without_notify_center.png "Screenshot")
