@@ -108,16 +108,24 @@ function setFavicon(count) {
 
 function addCountToDocumentTitle(counts) {
 	var title = [];
-	if ( !counts.messages ) {
+	if (counts === 0) {
+		counts = {
+			messages: 0,
+			reminders: 0
+		};
+	}
+	if ( counts.messages ) {
 		title.push(counts.messages);
 	}
-	if ( !counts.reminders ) {
+	if ( counts.reminders ) {
 		title.push(counts.reminders);
 	}
 	if (title.length) {
 		title = title.join(' / ') + ' — ';
+		document.title = title + documentTitle;
+	} else {
+		document.title = documentTitle;
 	}
-	document.title = title + documentTitle;
 }
 
 function getCountBasedOffFolders(folders){
@@ -239,10 +247,10 @@ function notify() {
 	var reminderCount = getReminderCount();
 	var newReminderCount = getNewReminderCount();
 
-	if (haveNewMessages()){
+	if ( haveNewMessages() ) {
 		notifyMessages.push( generateMessage(newUnreadMessageCount, 'message') );
 	}
-	if (haveNewReminders()){
+	if ( haveNewReminders() ) {
 		notifyMessages.push( generateMessage(newReminderCount, 'reminder') );
 	}
 	if (notifyMessages.length > 1) {
